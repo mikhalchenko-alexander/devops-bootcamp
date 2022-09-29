@@ -9,6 +9,30 @@ version '1.0-SNAPSHOT'
 
 sourceCompatibility = 1.8
 
+apply plugin: 'maven-publish'
+
+publishing {
+    publications {
+        maven(MavenPublication) {
+            artifact("build/libs/my-app-$version"+".jar") {
+                extension 'jar'
+            }
+        }
+    }
+
+    repositories {
+        maven {
+            name 'nexus'
+            url "http://167.99.244.109:8081/repository/project2-maven/"
+            allowInsecureProtocol true
+            credentials {
+                username project.repoUser
+                password project.repoPassword
+            }
+        }
+    }
+}
+
 repositories {
     mavenCentral()
 }
