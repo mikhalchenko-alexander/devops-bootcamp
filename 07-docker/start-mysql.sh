@@ -1,6 +1,7 @@
 #!/bin/bash
 
 docker run \
+    -d \
     -e MYSQL_USER=app \
     -e MYSQL_PASSWORD=secret \
     -e MYSQL_DATABASE=app \
