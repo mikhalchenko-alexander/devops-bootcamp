@@ -1,0 +1,27 @@
+version: "3.8"
+
+services:
+  app-mysql:
+    image: mysql:8
+    environment:
+      MYSQL_USER: app
+      MYSQL_PASSWORD: secret
+      MYSQL_DATABASE: app
+      MYSQL_ROOT_PASSWORD: supersecret
+    volumes:
+      - db-data:/var/lib/mysql
+
+  app-phpmyadmin:
+    image: phpmyadmin:5
+    environment:
+      PMA_HOST: app-mysql
+    depends_on:
+      - app-mysql
+    links:
+      - app-mysql
+    ports:
+      - "8081:80"
+
+volumes:
+  db-data:
+
