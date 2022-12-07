@@ -1,4 +1,4 @@
-FROM openjdk:8-jre-slim
+FROM --platform=linux/amd64 openjdk:8-jre-slim
 
 RUN mkdir /opt/app
 

@@ -11,6 +11,6 @@ fi
 echo Publishing image $1/app:$2
 
 ./gradlew build
-docker build -t $1/app:$2 .
+docker build --platform linux/amd64 -t $1/app:$2 .
 docker push $1/app:$2
 
