@@ -4,23 +4,37 @@ services:
   app-mysql:
     image: mysql:8
     environment:
-      MYSQL_USER: app
-      MYSQL_PASSWORD: secret
-      MYSQL_DATABASE: app
-      MYSQL_ROOT_PASSWORD: supersecret
+      - MYSQL_USER=${DB_USER}
+      - MYSQL_PASSWORD=${DB_PWD}
+      - MYSQL_DATABASE=${DB_NAME}
+      - MYSQL_ROOT_PASSWORD=${DB_ROOT_PWD}
     volumes:
       - db-data:/var/lib/mysql
 
   app-phpmyadmin:
     image: phpmyadmin:5
     environment:
-      PMA_HOST: app-mysql
+      - PMA_HOST=app-mysql
     depends_on:
-      - app-mysql
-    links:
       - app-mysql
     ports:
       - "8081:80"
+    links:
+      - app-mysql
+
+  app:
+    image: ${APP_IMAGE}
+    environment:
+      - DB_USER=${DB_USER}
+      - DB_PWD=${DB_PWD}
+      - DB_SERVER=app-mysql
+      - DB_NAME=${DB_NAME}
+    depends_on:
+      - app-mysql
+    ports:
+      - "8080:8080"
+    links:
+      - app-mysql
 
 volumes:
   db-data:
