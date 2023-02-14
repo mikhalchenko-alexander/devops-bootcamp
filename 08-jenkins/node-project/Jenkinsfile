@@ -1,0 +1,10 @@
+pipeline {
+    stages {
+        stage('Test') {
+            steps {
+                npm run test
+            }
+        }
+    }
+}
+
