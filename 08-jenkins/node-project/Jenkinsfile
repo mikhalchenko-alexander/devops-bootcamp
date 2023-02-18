@@ -3,6 +3,10 @@ pipeline {
 
     tools {nodejs "node"}
 
+    environment {
+        NEXUS_IP = '167.71.62.23'
+    }
+
     stages {
         stage("Increment version") {
             steps {
@@ -21,7 +25,7 @@ pipeline {
             steps {
                 script {
                     dir('08-jenkins/node-project/app') {
-                        sh 'npm i'
+                        sh 'npm ci'
                         sh 'npm run test'
                     }
                 }
@@ -40,6 +44,21 @@ pipeline {
                     }
                 }
             }
+        }
+
+        stage('Git push') {
+            steps {
+                script {
+                    withCredentials([credentialsId: 'github', usernameVariable: 'GITHUB_USER', passwordVariable: 'GITHUB_PASSWORD']) {
+                        sh 'git config --global user.name "jenkins"'
+                        sh 'git config --global user.email "jenkins@example.com"'
+                        sh "git remote set-url origin https://${GITHUB_USER}:${GITHUB_PASSWORD}@github.com:mikhalchenko-alexander/devops-bootcamp.git"
+                        sh "git add 08-jenkins/node-project/app/package.json"
+                        sh 'git commit -m "ci: version bump"'
+                        sh 'git push origin main'
+                    }
+                }
+            }    
         }
     }
 }
