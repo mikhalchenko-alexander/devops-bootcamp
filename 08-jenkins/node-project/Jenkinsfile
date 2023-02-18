@@ -34,7 +34,7 @@ pipeline {
             steps {
                 script {
                     dir('08-jenkins/node-project/app') {
-                        dockerImage "${env.NEXUS_IP}:8888/repository/nodejs-app:${IMAGE_VERSION}" "${NEXUS_IP}:8888"
+                        dockerImage "${env.NEXUS_IP}:8888/repository/nodejs-app:${IMAGE_VERSION}", "${NEXUS_IP}:8888"
                     }
                 }
             }
