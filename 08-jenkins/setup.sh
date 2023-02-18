@@ -11,5 +11,5 @@ fi
 docker --version
 
 echo "Running Nexus and Jenkins using Docker compose stack..."
-docker compose up -d
+DOCKER_PATH=$(which docker) docker compose up -d
 
