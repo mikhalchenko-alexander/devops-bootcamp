@@ -6,6 +6,7 @@ pipeline {
     stages {
         stage('Pre build') {
             steps {
+                sh 'cd 08-jenkins/node-project/app'
                 sh 'npm i'
             }
         }
