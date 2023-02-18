@@ -43,14 +43,7 @@ pipeline {
         stage('Git push') {
             steps {
                 script {
-                    withCredentials([usernamePassword(credentialsId: 'github', usernameVariable: 'GITHUB_USER', passwordVariable: 'GITHUB_PASSWORD')]) {
-                        sh 'git config --global user.name "jenkins"'
-                        sh 'git config --global user.email "jenkins@example.com"'
-                        sh "git remote set-url origin https://${GITHUB_USER}:${GITHUB_PASSWORD}@github.com/mikhalchenko-alexander/devops-bootcamp.git"
-                        sh "git add 08-jenkins/node-project/app/package.json 08-jenkins/node-project/app/package-lock.json"
-                        sh 'git commit -m "ci: version bump"'
-                        sh 'git push origin HEAD:main'
-                    }
+                    gitPush 'github.com/mikhalchenko-alexander/devops-bootcamp.git'
                 }
             }    
         }
