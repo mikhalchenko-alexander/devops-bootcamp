@@ -14,10 +14,7 @@ pipeline {
             steps {
                 script {
                     dir('08-jenkins/node-project/app') {
-                        sh 'npm version minor'
-                        def packageJSON = readJSON file: 'package.json'
-                        def packageJSONVersion = packageJSON.version
-                        env.IMAGE_VERSION = "$packageJSONVersion-$BUILD_NUMBER"
+                        incrementVersion()
                     }
                 }
             }
