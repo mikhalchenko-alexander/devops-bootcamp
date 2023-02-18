@@ -7,7 +7,7 @@ pipeline {
         stage('Test') {
             steps {
                 script {
-                    dir('cd 08-jenkins/node-project/app') {
+                    dir('08-jenkins/node-project/app') {
                         sh 'npm i'
                         sh 'npm run test'
                     }
