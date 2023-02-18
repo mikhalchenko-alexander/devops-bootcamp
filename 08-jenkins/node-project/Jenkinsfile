@@ -4,7 +4,7 @@ pipeline {
     tools {nodejs "node"}
 
     environment {
-        NEXUS_IP = '167.71.62.23'
+        NEXUS_IP = '104.248.243.228'
     }
 
     stages {
