@@ -4,12 +4,39 @@ pipeline {
     tools {nodejs "node"}
 
     stages {
+        stage("Increment version") {
+            steps {
+                script {
+                    dir('08-jenkins/node-project/app') {
+                        sh 'npm version minor'
+                        def packageJSON = readJSON file: 'package.json'
+                        def packageJSONVersion = packageJSON.version
+                        env.IMAGE_VERSION = "$packageJSONVersion-$BUILD_NUMBER"
+                    }
+                }
+            }
+        }
+
         stage('Test') {
             steps {
                 script {
                     dir('08-jenkins/node-project/app') {
                         sh 'npm i'
                         sh 'npm run test'
+                    }
+                }
+            }
+        }
+
+        stage('Docker image') {
+            steps {
+                script {
+                    dir('08-jenkins/node-project/app') {
+                        withCredentials([credentialsId: 'nexus', usernameVariable: 'NEXUS_USER', passwordVariable: 'NEXUS_PASSWORD']) {
+                            sh "echo ${NEXUS_PASSWORD} | docker login ${NEXUS_IP}:8888 -u ${NEXUS_USER} --password-stdin"
+                            sh "docker build -t http://${env.NEXUS_IP}:8081/repository/nodejs-app:${IMAGE_VERSION} ."
+                            sh "docker push http://${env.NEXUS_IP}:8081/repository/nodejs-app:${IMAGE_VERSION}"
+                        }
                     }
                 }
             }
