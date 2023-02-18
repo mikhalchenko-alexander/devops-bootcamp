@@ -55,7 +55,7 @@ pipeline {
                         sh "git remote set-url origin https://${GITHUB_USER}:${GITHUB_PASSWORD}@github.com/mikhalchenko-alexander/devops-bootcamp.git"
                         sh "git add 08-jenkins/node-project/app/package.json"
                         sh 'git commit -m "ci: version bump"'
-                        sh 'git push origin main'
+                        sh 'git push origin main:main'
                     }
                 }
             }    
