@@ -1,2 +1,8 @@
-aws ec2 create-key-pair --key-name alex-key --key-type rsa --key-format pem --tag-specifications "ResourceType=key-pair,Tags=[{Key='Name',Value='node-app-key-pair'}]" --query "KeyMaterial" --output text > ~/.ssh/node-app.pem
-chmod 400 ~/.ssh/node-app.pem
+aws ec2 run-instances \
+	--image-id ami-0ec7f9846da6b0f61 \
+	--instance-type t2.micro \
+	--key-name node-app-key \
+	--subnet-id $(./get-subnet-id.sh) \
+	--security-group-ids "$(./get-sg-id.sh)" \
+	--associate-public-ip-address \
+	--tag-specifications "ResourceType=ec2-instance,Tags=[{Key='Name',Value='node-app-instance'}]"
