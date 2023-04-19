@@ -5,4 +5,4 @@ aws ec2 run-instances \
 	--subnet-id $(./get-subnet-id.sh) \
 	--security-group-ids "$(./get-sg-id.sh)" \
 	--associate-public-ip-address \
-	--tag-specifications "ResourceType=ec2-instance,Tags=[{Key='Name',Value='node-app-instance'}]"
+	--tag-specifications "ResourceType=instance,Tags=[{Key='Name',Value='node-app-instance'}]"
