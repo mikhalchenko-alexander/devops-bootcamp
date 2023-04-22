@@ -5,15 +5,11 @@ pipeline {
 
     tools {nodejs "node"}
 
-    environment {
-        NEXUS_IP = '104.248.243.228'
-    }
-
     stages {
         stage("Increment version") {
             steps {
                 script {
-                    dir('08-jenkins/node-project/app') {
+                    dir('09-aws/node-project/app') {
                         incrementVersion()
                     }
                 }
@@ -23,7 +19,7 @@ pipeline {
         stage('Test') {
             steps {
                 script {
-                    dir('08-jenkins/node-project/app') {
+                    dir('09-aws/node-project/app') {
                         test()
                     }
                 }
@@ -33,8 +29,8 @@ pipeline {
         stage('Docker image') {
             steps {
                 script {
-                    dir('08-jenkins/node-project/app') {
-                        dockerImage "${env.NEXUS_IP}:8888/repository/nodejs-app:${IMAGE_VERSION}", "${NEXUS_IP}:8888"
+                    dir('09-aws/node-project/app') {
+                        dockerImage "aam123/nodejs-app:${IMAGE_VERSION}", "hub.docker.com"
                     }
                 }
             }
