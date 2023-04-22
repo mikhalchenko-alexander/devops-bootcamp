@@ -1,0 +1,51 @@
+@Library('nodejs-app')_
+
+pipeline {
+    agent any
+
+    tools {nodejs "node"}
+
+    environment {
+        NEXUS_IP = '104.248.243.228'
+    }
+
+    stages {
+        stage("Increment version") {
+            steps {
+                script {
+                    dir('08-jenkins/node-project/app') {
+                        incrementVersion()
+                    }
+                }
+            }
+        }
+
+        stage('Test') {
+            steps {
+                script {
+                    dir('08-jenkins/node-project/app') {
+                        test()
+                    }
+                }
+            }
+        }
+
+        stage('Docker image') {
+            steps {
+                script {
+                    dir('08-jenkins/node-project/app') {
+                        dockerImage "${env.NEXUS_IP}:8888/repository/nodejs-app:${IMAGE_VERSION}", "${NEXUS_IP}:8888"
+                    }
+                }
+            }
+        }
+
+        stage('Git push') {
+            steps {
+                script {
+                    gitPush 'github.com/mikhalchenko-alexander/devops-bootcamp.git'
+                }
+            }
+        }
+    }
+}
