@@ -1,11 +1,7 @@
 @Library('nodejs-app')_
 
 pipeline {
-    agent {
-        docker {
-          image 'docker:latest'
-        }
-    }
+    agent any
 
     tools {nodejs "node"}
 
