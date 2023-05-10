@@ -2,7 +2,7 @@ FROM node:19-alpine3.16
 
 RUN apk add shadow && \
     useradd nodejs -m && \
-    mkdir /opt/app \
+    mkdir /opt/app
 
 WORKDIR /opt/app
 
