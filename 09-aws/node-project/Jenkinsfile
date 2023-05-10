@@ -30,7 +30,7 @@ pipeline {
             steps {
                 script {
                     dir('09-aws/node-project/app') {
-                        dockerImage "aam123/nodejs-app:${IMAGE_VERSION}", "index.docker.io"
+                        dockerImage "index.docker.io/aam123/nodejs-app:${IMAGE_VERSION}", "index.docker.io"
                     }
                 }
             }
