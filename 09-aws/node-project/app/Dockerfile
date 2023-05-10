@@ -2,14 +2,15 @@ FROM node:19-alpine3.16
 
 RUN apk add shadow && \
     useradd nodejs -m && \
-    mkdir /opt/app && \
-    chown -R nodejs:nodejs /opt/app
+    mkdir /opt/app \
 
-USER nodejs
+COPY . .
+
+RUN chown -R nodejs:nodejs /opt/app
 
 WORKDIR /opt/app
 
-COPY . .
+USER nodejs
 
 RUN npm ci
 
