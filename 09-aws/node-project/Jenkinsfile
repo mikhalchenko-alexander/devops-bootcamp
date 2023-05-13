@@ -43,5 +43,13 @@ pipeline {
                 }
             }
         }
+
+        stage('Deploy') {
+            steps {
+                sshagent(credentials: ['ec2-instance']) {
+                    sh 'ssh ubuntu@52.57.155.60 ls'
+                }
+            }
+        }
     }
 }
