@@ -30,7 +30,8 @@ pipeline {
             steps {
                 script {
                     dir('09-aws/node-project/app') {
-                        dockerImage "aam123/nodejs-app:${IMAGE_VERSION}", "docker.io"
+                        env.IMAGE_NAME = "aam123/nodejs-app:${IMAGE_VERSION}"
+                        dockerImage IMAGE_NAME, "docker.io"
                     }
                 }
             }
@@ -46,8 +47,14 @@ pipeline {
 
         stage('Deploy') {
             steps {
-                sshagent(credentials: ['ec2-instance']) {
-                    sh 'ssh -o StrictHostKeyChecking=no ubuntu@52.57.155.60 ls'
+                script {
+                    def ec2instance = 'ubuntu@52.57.155.60'
+                    def shellCmd = "bash server-cmds.sh ${IMAGE_NAME}"
+                    sshagent(credentials: ['ec2-instance']) {
+                        sh "scp -o StrictHostKeyChecking=no 09-aws/server-cmds.sh ${ec2instance}:~/"
+                        sh "scp -o StrictHostKeyChecking=no 09-aws/node-project/app/docker-compose.yml ${ec2instance}:~/"
+                        sh "ssh -o StrictHostKeyChecking=no ${ec2instance} ${shellCmd}"
+                    }
                 }
             }
         }
