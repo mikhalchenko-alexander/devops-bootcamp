@@ -7,6 +7,11 @@ pipeline {
 
     stages {
         stage("Increment version") {
+            when {
+                expression {
+                    return env.GIT_BRANCH == "main"
+                }
+            }
             steps {
                 script {
                     dir('09-aws/node-project/app') {
@@ -27,6 +32,11 @@ pipeline {
         }
 
         stage('Docker image') {
+            when {
+                expression {
+                    return env.GIT_BRANCH == "main"
+                }
+            }
             steps {
                 script {
                     dir('09-aws/node-project/app') {
@@ -38,6 +48,11 @@ pipeline {
         }
 
         stage('Git push') {
+            when {
+                expression {
+                    return env.GIT_BRANCH == "main"
+                }
+            }
             steps {
                 script {
                     gitPush 'github.com/mikhalchenko-alexander/devops-bootcamp.git'
@@ -46,6 +61,11 @@ pipeline {
         }
 
         stage('Deploy') {
+            when {
+                expression {
+                    return env.GIT_BRANCH == "main"
+                }
+            }
             steps {
                 script {
                     withCredentials([usernamePassword(credentialsId: 'nexus', usernameVariable: 'NEXUS_USER', passwordVariable: 'NEXUS_PASSWORD')]) {
