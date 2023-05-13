@@ -2,6 +2,6 @@ version: "3.8"
 
 services:
   node-app:
-    build: ./
+    image: ${IMAGE_NAME}
     ports:
       - "3000:3000"
