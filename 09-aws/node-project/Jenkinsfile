@@ -48,12 +48,14 @@ pipeline {
         stage('Deploy') {
             steps {
                 script {
-                    def ec2instance = 'ubuntu@52.57.155.60'
-                    def shellCmd = "bash server-cmds.sh ${IMAGE_NAME}"
-                    sshagent(credentials: ['ec2-instance']) {
-                        sh "scp -o StrictHostKeyChecking=no 09-aws/server-cmds.sh ${ec2instance}:~/"
-                        sh "scp -o StrictHostKeyChecking=no 09-aws/node-project/app/docker-compose.yml ${ec2instance}:~/"
-                        sh "ssh -o StrictHostKeyChecking=no ${ec2instance} ${shellCmd}"
+                    withCredentials([usernamePassword(credentialsId: 'nexus', usernameVariable: 'NEXUS_USER', passwordVariable: 'NEXUS_PASSWORD')]) {
+                        def ec2instance = 'ubuntu@52.57.155.60'
+                        def shellCmd = "bash server-cmds.sh ${IMAGE_NAME} ${NEXUS_USER} ${NEXUS_PASSWORD}"
+                        sshagent(credentials: ['ec2-instance']) {
+                            sh "scp -o StrictHostKeyChecking=no 09-aws/server-cmds.sh ${ec2instance}:~/"
+                            sh "scp -o StrictHostKeyChecking=no 09-aws/node-project/app/docker-compose.yml ${ec2instance}:~/"
+                            sh "ssh -o StrictHostKeyChecking=no ${ec2instance} ${shellCmd}"
+                        }
                     }
                 }
             }
