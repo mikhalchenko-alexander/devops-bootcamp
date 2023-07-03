@@ -1,0 +1,4 @@
+architecture: replication
+
+secondary:
+  replicaCount: 3
