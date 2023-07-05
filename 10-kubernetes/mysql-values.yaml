@@ -1,3 +1,6 @@
+image:
+  tag: 8.0.33-debian-11-r27
+
 architecture: replication
 auth:
   rootPassword: secret
