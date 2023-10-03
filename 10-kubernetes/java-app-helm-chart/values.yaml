@@ -15,3 +15,7 @@ ingress:
   host: java-app.com
   port: 8080
   path: /
+
+traefik:
+  ingressClass:
+    name: traefik
