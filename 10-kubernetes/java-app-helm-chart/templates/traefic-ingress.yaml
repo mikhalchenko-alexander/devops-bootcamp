@@ -3,7 +3,7 @@ kind: Ingress
 metadata:
   name: java-app-ingress
 spec:
-  ingressClassName: traefik
+  ingressClassName: {{ .Values.traefik.ingressClass.name }}
   rules:
     - host: {{ .Values.ingress.host }}
     - http:
