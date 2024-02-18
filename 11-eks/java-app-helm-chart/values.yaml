@@ -1,0 +1,21 @@
+database:
+  server: "mysql-primary.default"
+  user: amF2YQ== # java
+  pass: amF2YS1wYXNz # java-pass
+  name: amF2YS1kYg== # java-db
+  rootPass: c2VjcmV0 # secret
+
+app:
+  image: aam123/java-app
+  version: "1.0"
+  port: 8080
+  replicas: 3
+
+ingress:
+  host: java-app.com
+  port: 8080
+  path: /
+
+traefik:
+  ingressClass:
+    name: traefik
