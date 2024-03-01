@@ -8,7 +8,14 @@ auth:
   password: java-pass
   database: java-db
 
+volumePermissions:
+  enabled: true
+
+primary:
+  persistence:
+    enabled: false
+
 secondary:
   replicaCount: 2
   persistence:
-    storageClass: hostpath
+    enabled: false
