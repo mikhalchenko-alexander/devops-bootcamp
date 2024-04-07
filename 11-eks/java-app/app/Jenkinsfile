@@ -1,0 +1,50 @@
+@Library('nodejs-app')_
+
+pipeline {
+    agent any
+
+    environment {
+        ECR_REGISTRY = '???'
+    }
+
+    stages {
+        stage("Increment version") {
+            steps {
+                script {
+                    dir('11-eks/java-app/app') {
+                        incrementVersion()
+                    }
+                }
+            }
+        }
+
+        stage('Test') {
+            steps {
+                script {
+                    dir('11-eks/java-app/app') {
+                        test()
+                    }
+                }
+            }
+        }
+
+        stage('Docker image') {
+            steps {
+                script {
+                    dir('11-eks/java-app/app') {
+                        dockerImage "${env.ECR_REGISTRY}:${IMAGE_VERSION}", "${ECR_REGISTRY}"
+                    }
+                }
+            }
+        }
+
+        stage('Git push') {
+            steps {
+                script {
+                    gitPush 'github.com/mikhalchenko-alexander/devops-bootcamp.git'
+                }
+            }
+        }
+    }
+}
+
