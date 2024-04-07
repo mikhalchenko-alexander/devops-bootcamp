@@ -7,7 +7,7 @@ database:
 
 app:
   image: aam123/java-app
-  version: "1.0"
+  version: "1.1"
   port: 8080
   replicas: 3
 
