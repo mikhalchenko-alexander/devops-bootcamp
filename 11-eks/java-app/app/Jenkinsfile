@@ -8,7 +8,7 @@ pipeline {
     }
 
     stages {
-        stage("Increment version") {
+        stage('Increment version') {
             steps {
                 script {
                     dir('11-eks/java-app/app') {
@@ -24,6 +24,16 @@ pipeline {
                     dir('11-eks/java-app/app') {
                         test()
                     }
+                }
+            }
+        }
+
+        stage('Build') {
+            steps {
+                script {
+                   dir('11-eks/java-app/app') {
+                       sh './gradlew bootJar'
+                   }
                 }
             }
         }
