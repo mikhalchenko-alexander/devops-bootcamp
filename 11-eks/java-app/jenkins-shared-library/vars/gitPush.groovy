@@ -4,6 +4,7 @@ def call(String repo) {
         sh 'git config --global user.email "jenkins@example.com"'
         sh "git remote set-url origin $repo"
         sh "git add ."
+        sh "git add ../java-app-helm-chart"
         sh 'git commit -m "ci: version bump"'
         sh 'GIT_SSH_COMMAND="ssh -i $PRIVATE_SSH_KEY" git push origin HEAD:main'
     }
