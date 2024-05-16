@@ -1,4 +1,4 @@
-@Library('nodejs-app')_
+@Library('java-app')_
 
 pipeline {
     agent any
