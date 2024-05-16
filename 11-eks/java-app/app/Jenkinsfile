@@ -4,7 +4,7 @@ pipeline {
     agent any
 
     environment {
-        ECR_REGISTRY = '???'
+        ECR_REGISTRY = '458405758445.dkr.ecr.eu-central-1.amazonaws.com/11-eks-java-app'
     }
 
     stages {
@@ -32,7 +32,7 @@ pipeline {
             steps {
                 script {
                     dir('11-eks/java-app/app') {
-                        dockerImage "${env.ECR_REGISTRY}:${IMAGE_VERSION}", "${ECR_REGISTRY}"
+                        dockerImage "${env.ECR_REGISTRY}:${IMAGE_VERSION}", "${ECR_REGISTRY}", "eu-central-1"
                     }
                 }
             }

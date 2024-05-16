@@ -1,6 +1,6 @@
-def call(String imageName, String dockerHost) {
-    withCredentials([usernamePassword(credentialsId: 'ecr', usernameVariable: 'ECR_USER', passwordVariable: 'ECR_PASSWORD')]) {
-        sh "echo ${ECR_PASSWORD} | docker login $dockerHost -u ${ECR_USER} --password-stdin"
+def call(String imageName, String dockerHost, String region) {
+    withCredentials([usernamePassword(credentialsId: 'ecr', usernameVariable: 'AWS_ACCESS_KEY_ID', passwordVariable: 'AWS_SECRET_ACCESS_KEY')]) {
+        sh "aws ecr get-login-password --region $region | docker login --username AWS --password-stdin $dockerHost"
         sh "docker build --platform linux/amd64/v2 -t $imageName ."
         sh "docker push $imageName"
     }
