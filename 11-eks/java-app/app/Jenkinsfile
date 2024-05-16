@@ -51,7 +51,7 @@ pipeline {
         stage('Git push') {
             steps {
                 script {
-                    gitPush 'github.com/mikhalchenko-alexander/devops-bootcamp.git'
+                    gitPush 'git@github.com:mikhalchenko-alexander/devops-bootcamp.git'
                 }
             }
         }
