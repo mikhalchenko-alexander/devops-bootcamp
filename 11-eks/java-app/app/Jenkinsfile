@@ -13,7 +13,7 @@ pipeline {
                 script {
                     dir('11-eks/java-app/app') {
                         incrementVersion()
-                        sh "sed -i '' '/app:/,/version:/s/version: \"[^\"]*\"/version: \"${env.IMAGE_VERSION}\"/' ../java-app-helm-chart/values.yaml"
+                        sh "sed -i '/app:/,/version:/s/version: \"[^\"]*\"/version: \"${env.IMAGE_VERSION}\"/' ../java-app-helm-chart/values.yaml"
                     }
                 }
             }
