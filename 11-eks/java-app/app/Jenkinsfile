@@ -59,9 +59,7 @@ pipeline {
 
         stage('Deploy') {
             steps {
-                 dir('11-eks') {
-                     deploy "devops-bootcamp", "eu-central-1"
-                 }
+                 deploy "devops-bootcamp", "eu-central-1"
             }
         }
     }

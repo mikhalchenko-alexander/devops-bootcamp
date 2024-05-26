@@ -4,7 +4,7 @@ def call(String clusterName, String region) {
     }
 
     dir('11-eks/mysql') {
-        sh 'helm upgrade mysql oci://registry-1.docker.io/bitnamicharts/mysql -f ./mysql-values.yaml'
+        sh 'helm upgrade mysql oci://registry-1.docker.io/bitnamicharts/mysql -f mysql-values.yaml'
     }
 
     dir('11-eks/phpmyadmin') {
