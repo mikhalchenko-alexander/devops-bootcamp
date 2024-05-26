@@ -33,7 +33,7 @@ pipeline {
             steps {
                 script {
                    dir('11-eks/java-app/app') {
-                       sh './gradlew bootJar'
+                       sh './gradlew clean bootJar'
                    }
                 }
             }
