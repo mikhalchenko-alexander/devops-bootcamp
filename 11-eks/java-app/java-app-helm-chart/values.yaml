@@ -7,7 +7,7 @@ database:
 
 app:
   image: 458405758445.dkr.ecr.eu-central-1.amazonaws.com/11-eks-java-app
-  version: "1.4.0-17"
+  version: "1.5.0-18"
   port: 8080
   replicas: 3
 
