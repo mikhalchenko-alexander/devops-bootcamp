@@ -5,15 +5,15 @@ def call(String clusterName, String region) {
         String kubeconfigPath = '/root/.kube/config'
 
         dir('11-eks/mysql') {
-            sh "helm upgrade mysql oci://registry-1.docker.io/bitnamicharts/mysql -f mysql-values.yaml --kubeconfig $kubeconfigPath"
+            sh "helm upgrade mysql oci://registry-1.docker.io/bitnamicharts/mysql -f mysql-values.yaml --kubeconfig $kubeconfigPath --debug"
         }
 
         dir('11-eks/phpmyadmin') {
-            sh "helm upgrade phpmyadmin oci://registry-1.docker.io/bitnamicharts/phpmyadmin --kubeconfig $kubeconfigPath"
+            sh "helm upgrade phpmyadmin oci://registry-1.docker.io/bitnamicharts/phpmyadmin --kubeconfig $kubeconfigPath --debug"
         }
 
         dir('11-eks/java-app') {
-            sh "helm upgrade -n java-app java-app java-app-helm-chart --kubeconfig $kubeconfigPath"
+            sh "helm upgrade -n java-app java-app java-app-helm-chart --kubeconfig $kubeconfigPath --debug"
         }
     }
 }
