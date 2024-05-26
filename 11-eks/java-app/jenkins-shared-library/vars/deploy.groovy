@@ -11,7 +11,7 @@ def call(String clusterName, String region) {
         }
 
         dir('11-eks/java-app/java-app-helm-chart') {
-            sh "helm dependency build"
+            sh "helm dependency update && helm dependency build"
         }
 
         dir('11-eks/java-app') {
