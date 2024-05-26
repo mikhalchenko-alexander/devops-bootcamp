@@ -11,7 +11,9 @@ def call(String clusterName, String region) {
         }
 
         dir('11-eks/java-app/java-app-helm-chart') {
-            sh "helm dependency update && helm dependency build"
+            sh "helm repo add traefik https://traefik.github.io/charts"
+            sh "helm dependency update"
+            sh "helm dependency build"
         }
 
         dir('11-eks/java-app') {
