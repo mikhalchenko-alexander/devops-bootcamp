@@ -4,6 +4,8 @@ def call(String clusterName, String region) {
 
         String kubeconfigPath = '/root/.kube/config'
 
+        sh "kubectl get nodes"
+
         dir('11-eks/mysql') {
             sh "helm upgrade mysql oci://registry-1.docker.io/bitnamicharts/mysql -f mysql-values.yaml --kubeconfig $kubeconfigPath --debug"
         }
