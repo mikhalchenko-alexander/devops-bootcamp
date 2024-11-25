@@ -1,10 +1,21 @@
 provider "aws" {
-  region = "eu-central-1"
+  region = var.region
+}
+
+terraform {
+  backend "s3" {
+    region = "eu-central-1"
+    bucket = "java-app-eks-terraform-state"
+    key    = "global/s3/terraform.tfstate"
+
+    dynamodb_table = "java-app-eks-terraform-locks"
+    encrypt        = true
+  }
 }
 
 locals {
-  app_name_prefix = "java-app-eks"
-  cluster_name = "${local.app_name_prefix}-${terraform.workspace}"
+  app_name_prefix = var.app_name_prefix
+  cluster_name    = "${local.app_name_prefix}-${var.env_prefix}"
 }
 
 data "aws_availability_zones" "available" {}
@@ -16,8 +27,8 @@ module "vpc" {
   name                 = "${local.app_name_prefix}-vpc"
   cidr                 = "10.0.0.0/16"
   azs                  = data.aws_availability_zones.available.names
-  private_subnets      = ["10.0.1.0/24", "10.0.2.0/24", "10.0.3.0/24"]
-  public_subnets       = ["10.0.4.0/24", "10.0.5.0/24", "10.0.6.0/24"]
+  private_subnets = ["10.0.1.0/24", "10.0.2.0/24", "10.0.3.0/24"]
+  public_subnets = ["10.0.4.0/24", "10.0.5.0/24", "10.0.6.0/24"]
   enable_nat_gateway   = true
   single_nat_gateway   = true
   enable_dns_hostnames = true
@@ -54,9 +65,11 @@ module "eks" {
         AmazonEBSCSIDriverPolicy = "arn:aws:iam::aws:policy/service-role/AmazonEBSCSIDriverPolicy"
       }
 
+      node_group_name = "ng-1"
       instance_types = ["m5.large"]
-      min_size = 1
-      max_size = 3
+      min_size        = 1
+      max_size        = 3
+      desired_size    = 3
     }
   }
 
@@ -73,6 +86,6 @@ module "eks" {
   }
 
   cluster_name = local.cluster_name
-  vpc_id = module.vpc.vpc_id
-  subnet_ids = module.vpc.private_subnets
+  vpc_id       = module.vpc.vpc_id
+  subnet_ids   = module.vpc.private_subnets
 }
