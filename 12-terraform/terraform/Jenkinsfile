@@ -1,0 +1,26 @@
+@Library('java-app') _
+
+pipeline {
+    agent any
+
+    stages {
+        stage('Init remote state') {
+            steps {
+                withCredentials([usernamePassword(credentialsId: 'aws', usernameVariable: 'AWS_ACCESS_KEY_ID', passwordVariable: 'AWS_SECRET_ACCESS_KEY')]) {
+                    dir('12-terraform/terraform/state') {
+                    }
+                }
+            }
+        }
+
+        stage('Terraform apply') {
+            steps {
+                withCredentials([usernamePassword(credentialsId: 'aws', usernameVariable: 'AWS_ACCESS_KEY_ID', passwordVariable: 'AWS_SECRET_ACCESS_KEY')]) {
+                    dir('12-terraform/terraform/app') {
+                    }
+                }
+            }
+        }
+    }
+}
+
