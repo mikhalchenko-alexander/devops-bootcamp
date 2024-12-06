@@ -8,8 +8,7 @@ pipeline {
             steps {
                 withCredentials([usernamePassword(credentialsId: 'aws', usernameVariable: 'AWS_ACCESS_KEY_ID', passwordVariable: 'AWS_SECRET_ACCESS_KEY')]) {
                     dir('12-terraform/terraform/state') {
-                        sh "terraform init"
-                        sh "terraform apply --var-file=main.tfvars -auto-approve"
+                        sh "./scripts/init-state.sh"
                     }
                 }
             }
