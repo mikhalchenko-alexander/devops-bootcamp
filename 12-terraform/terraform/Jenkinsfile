@@ -8,7 +8,7 @@ pipeline {
             steps {
                 withCredentials([usernamePassword(credentialsId: 'aws', usernameVariable: 'AWS_ACCESS_KEY_ID', passwordVariable: 'AWS_SECRET_ACCESS_KEY')]) {
                     dir('12-terraform/terraform/state') {
-                        sh "./scripts/init-state.sh"
+                        sh "../scripts/init-state.sh"
                     }
                 }
             }
