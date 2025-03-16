@@ -24,7 +24,7 @@ provider "helm" {
 
 resource "helm_release" "mysql" {
   name       = "mysql"
-  repository = "oci://registry-1.docker.io/bitnamicharts/mysql"
+  repository = "https://charts.bitnami.com/bitnami"
   chart      = "mysql"
   version    = "12.1.0"
 
