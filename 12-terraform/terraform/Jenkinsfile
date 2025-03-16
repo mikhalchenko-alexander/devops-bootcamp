@@ -20,6 +20,7 @@ pipeline {
                     dir('12-terraform/terraform/app') {
                         sh "terraform init"
                         sh "terraform apply --var-file=dev.tfvars -auto-approve"
+                        sh "aws eks update-kubeconfig --name ${TF_VAR_cluster_name} --region ${TF_VAR_region}"
                     }
                 }
             }
