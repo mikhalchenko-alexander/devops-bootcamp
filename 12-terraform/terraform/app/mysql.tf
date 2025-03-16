@@ -27,6 +27,7 @@ resource "helm_release" "mysql" {
   repository = "oci://registry-1.docker.io/bitnamicharts"
   chart      = "mysql"
   version    = "12.1.0"
+  timeout    = "1000" # seconds
 
   values = [
     file("mysql-values.yaml")
