@@ -11,13 +11,6 @@ terraform {
     dynamodb_table = "java-app-eks-terraform-locks"
     encrypt        = true
   }
-
-  required_providers {
-    kubectl = {
-      source  = "gavinbunney/kubectl"
-      version = ">= 1.7.0"
-    }
-  }
 }
 
 locals {

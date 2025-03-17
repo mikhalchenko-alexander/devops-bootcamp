@@ -34,6 +34,31 @@ module "eks" {
     }
   }
 
+  access_entries = {
+    jenkins = {
+      principal_arn = var.jenkins_user_arn
+      policy_associations = {
+        admin = {
+          policy_arn = "arn:aws:eks::aws:cluster-access-policy/AmazonEKSClusterAdminPolicy"
+          access_scope = {
+            type = "cluster"
+          }
+        }
+      }
+    }
+    alex = {
+      principal_arn = var.alex_user_arn
+      policy_associations = {
+        admin = {
+          policy_arn = "arn:aws:eks::aws:cluster-access-policy/AmazonEKSClusterAdminPolicy"
+          access_scope = {
+            type = "cluster"
+          }
+        }
+      }
+    }
+  }
+
   cluster_name                   = local.cluster_name
   vpc_id                         = module.vpc.vpc_id
   subnet_ids                     = module.vpc.private_subnets
