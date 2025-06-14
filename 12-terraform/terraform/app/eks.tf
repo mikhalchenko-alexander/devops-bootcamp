@@ -7,6 +7,7 @@ module "eks" {
   cluster_addons = {
     aws-ebs-csi-driver = {}
     vpc-cni = {}
+    kube-proxy = {}
   }
 
   eks_managed_node_groups = {
