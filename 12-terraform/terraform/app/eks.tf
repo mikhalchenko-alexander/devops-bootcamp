@@ -32,20 +32,6 @@ module "eks" {
         }
       ]
     }
-
-    system = {
-      name = "fp-system"
-
-      selectors = [
-        {
-          namespace = "kube-system"
-        }
-      ]
-
-      labels = {
-        k8s-app = "kube-dns"
-      }
-    }
   }
 
   access_entries = {
