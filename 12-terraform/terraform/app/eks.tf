@@ -6,6 +6,7 @@ module "eks" {
 
   cluster_addons = {
     aws-ebs-csi-driver = {}
+    vpc-cni = {}
   }
 
   eks_managed_node_groups = {
