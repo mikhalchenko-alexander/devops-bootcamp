@@ -70,7 +70,7 @@ resource "aws_security_group_rule" "eks-node-ingress-cluster-dns" {
   from_port                = 53
   protocol                 = 17
   security_group_id        = module.eks.cluster_security_group_id
-  source_security_group_id = module.eks.cluster_security_group_id
+  # source_security_group_id = module.eks.cluster_security_group_id
   to_port                  = 53
   type                     = "ingress"
   cidr_blocks = [module.vpc.vpc_cidr_block]
