@@ -16,6 +16,11 @@ module "eks" {
         AmazonEBSCSIDriverPolicy = "arn:aws:iam::aws:policy/service-role/AmazonEBSCSIDriverPolicy"
       }
 
+      launch_template = {
+        id = aws_launch_template.fargate_launch_template.id
+        version = aws_launch_template.fargate_launch_template.latest_version
+      }
+
       node_group_name = "ng-1"
       instance_types = ["m5.large"]
       min_size        = 1
@@ -85,4 +90,9 @@ resource "aws_security_group_rule" "eks-node-egress-cluster-dns" {
   source_security_group_id = module.eks.cluster_security_group_id
   to_port                  = 53
   type                     = "egress"
+}
+
+resource "aws_launch_template" "fargate_launch_template" {
+  name_prefix = module.eks.cluster_id
+  vpc_security_group_ids = [module.eks.cluster_security_group_id]
 }
