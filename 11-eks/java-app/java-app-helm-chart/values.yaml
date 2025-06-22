@@ -1,5 +1,5 @@
 database:
-  server: "mysql-primary.default"
+  server: "mysql-primary.default.svc.cluster.local"
   user: amF2YQ== # java
   pass: amF2YS1wYXNz # java-pass
   name: amF2YS1kYg== # java-db
