@@ -72,20 +72,40 @@ module "eks" {
   cluster_endpoint_public_access = true
 }
 
-resource "aws_security_group_rule" "eks-node-ingress-cluster-dns" {
-  description              = "Allow pods DNS ingress"
+resource "aws_security_group_rule" "eks-node-tcp-ingress-cluster-dns" {
+  description              = "Allow pods DNS TCP ingress"
   from_port                = 53
-  protocol                 = 17
+  protocol                 = "tcp"
   security_group_id        = module.eks.cluster_security_group_id
   source_security_group_id = module.eks.cluster_security_group_id
   to_port                  = 53
   type                     = "ingress"
 }
 
-resource "aws_security_group_rule" "eks-node-egress-cluster-dns" {
-  description              = "Allow pods DNS egress"
+resource "aws_security_group_rule" "eks-node-tcp-egress-cluster-dns" {
+  description              = "Allow pods DNS TCP egress"
   from_port                = 53
-  protocol                 = 17
+  protocol                 = "tcp"
+  security_group_id        = module.eks.cluster_security_group_id
+  source_security_group_id = module.eks.cluster_security_group_id
+  to_port                  = 53
+  type                     = "egress"
+}
+
+resource "aws_security_group_rule" "eks-node-udp-ingress-cluster-dns" {
+  description              = "Allow pods DNS UDP ingress"
+  from_port                = 53
+  protocol                 = "udp"
+  security_group_id        = module.eks.cluster_security_group_id
+  source_security_group_id = module.eks.cluster_security_group_id
+  to_port                  = 53
+  type                     = "ingress"
+}
+
+resource "aws_security_group_rule" "eks-node-udp-egress-cluster-dns" {
+  description              = "Allow pods DNS UDP egress"
+  from_port                = 53
+  protocol                 = "udp"
   security_group_id        = module.eks.cluster_security_group_id
   source_security_group_id = module.eks.cluster_security_group_id
   to_port                  = 53
