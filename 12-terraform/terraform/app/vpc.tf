@@ -35,38 +35,3 @@ module "vpc" {
     "kubernetes.io/role/internal-elb"             = "1"
   }
 }
-
-resource "aws_vpc_endpoint" "fargate_eks" {
-  vpc_id       = module.vpc.vpc_id
-  vpc_endpoint_type = "Interface"
-  service_name = "com.amazonaws.eu-central-1.eks"
-  security_group_ids = [module.eks.cluster_security_group_id]
-}
-
-resource "aws_vpc_endpoint" "fargate_ecr_api" {
-  vpc_id       = module.vpc.vpc_id
-  vpc_endpoint_type = "Interface"
-  service_name = "com.amazonaws.eu-central-1.ecr.api"
-  security_group_ids = [module.eks.cluster_security_group_id]
-}
-
-resource "aws_vpc_endpoint" "fargate_ecr_dkr" {
-  vpc_id       = module.vpc.vpc_id
-  vpc_endpoint_type = "Interface"
-  service_name = "com.amazonaws.eu-central-1.ecr.dkr"
-  security_group_ids = [module.eks.cluster_security_group_id]
-}
-
-resource "aws_vpc_endpoint" "fargate_logs" {
-  vpc_id       = module.vpc.vpc_id
-  vpc_endpoint_type = "Interface"
-  service_name = "com.amazonaws.eu-central-1.logs"
-  security_group_ids = [module.eks.cluster_security_group_id]
-}
-
-resource "aws_vpc_endpoint" "fargate_s3" {
-  vpc_id       = module.vpc.vpc_id
-  vpc_endpoint_type = "Gateway"
-  service_name = "com.amazonaws.eu-central-1.s3"
-  route_table_ids = [module.vpc.default_route_table_id]
-}

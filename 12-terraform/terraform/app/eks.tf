@@ -6,8 +6,6 @@ module "eks" {
 
   cluster_addons = {
     aws-ebs-csi-driver = {}
-    vpc-cni = {}
-    kube-proxy = {}
   }
 
   eks_managed_node_groups = {
@@ -16,13 +14,8 @@ module "eks" {
         AmazonEBSCSIDriverPolicy = "arn:aws:iam::aws:policy/service-role/AmazonEBSCSIDriverPolicy"
       }
 
-      launch_template = {
-        id = aws_launch_template.fargate_launch_template.id
-        version = aws_launch_template.fargate_launch_template.latest_version
-      }
-
       node_group_name = "ng-1"
-      instance_types = ["m5.large"]
+      instance_types = ["t3.small"]
       min_size        = 1
       max_size        = 3
       desired_size    = 3
@@ -70,49 +63,4 @@ module "eks" {
   vpc_id                         = module.vpc.vpc_id
   subnet_ids                     = module.vpc.private_subnets
   cluster_endpoint_public_access = true
-}
-
-resource "aws_security_group_rule" "eks-node-tcp-ingress-cluster-dns" {
-  description              = "Allow pods DNS TCP ingress"
-  from_port                = 53
-  protocol                 = "tcp"
-  security_group_id        = module.eks.cluster_security_group_id
-  source_security_group_id = module.eks.cluster_security_group_id
-  to_port                  = 53
-  type                     = "ingress"
-}
-
-resource "aws_security_group_rule" "eks-node-tcp-egress-cluster-dns" {
-  description              = "Allow pods DNS TCP egress"
-  from_port                = 53
-  protocol                 = "tcp"
-  security_group_id        = module.eks.cluster_security_group_id
-  source_security_group_id = module.eks.cluster_security_group_id
-  to_port                  = 53
-  type                     = "egress"
-}
-
-resource "aws_security_group_rule" "eks-node-udp-ingress-cluster-dns" {
-  description              = "Allow pods DNS UDP ingress"
-  from_port                = 53
-  protocol                 = "udp"
-  security_group_id        = module.eks.cluster_security_group_id
-  source_security_group_id = module.eks.cluster_security_group_id
-  to_port                  = 53
-  type                     = "ingress"
-}
-
-resource "aws_security_group_rule" "eks-node-udp-egress-cluster-dns" {
-  description              = "Allow pods DNS UDP egress"
-  from_port                = 53
-  protocol                 = "udp"
-  security_group_id        = module.eks.cluster_security_group_id
-  source_security_group_id = module.eks.cluster_security_group_id
-  to_port                  = 53
-  type                     = "egress"
-}
-
-resource "aws_launch_template" "fargate_launch_template" {
-  name_prefix = module.eks.cluster_id
-  vpc_security_group_ids = [module.eks.cluster_security_group_id]
 }
