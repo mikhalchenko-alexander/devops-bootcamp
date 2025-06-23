@@ -1,8 +1,8 @@
 module "eks" {
   source  = "terraform-aws-modules/eks/aws"
-  version = "20.29.0"
+  version = "20.37.1"
 
-  cluster_version = "1.29"
+  cluster_version = "1.33"
 
   cluster_addons = {
     aws-ebs-csi-driver = {}
