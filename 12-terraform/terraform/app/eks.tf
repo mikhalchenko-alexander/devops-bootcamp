@@ -34,6 +34,35 @@ module "eks" {
     }
   }
 
+  node_security_group_additional_rules = {
+    fargate_nodes_to_dns_tcp = {
+      description                   = "Fargate nodes to cluster DNS TCP"
+      protocol                      = "tcp"
+      from_port                     = 53
+      to_port                       = 53
+      type                          = "ingress"
+      source_cluster_security_group = true
+    }
+
+    fargate_nodes_to_dns_udp = {
+      description                   = "Fargate nodes to cluster DNS UDP"
+      protocol                      = "udp"
+      from_port                     = 53
+      to_port                       = 53
+      type                          = "ingress"
+      source_cluster_security_group = true
+    }
+
+    fargate_nodes_to_dns_tcp = {
+      description                   = "Fargate nodes to MySQL nodes"
+      protocol                      = "tcp"
+      from_port                     = 3306
+      to_port                       = 3306
+      type                          = "ingress"
+      source_cluster_security_group = true
+    }
+  }
+
   access_entries = {
     jenkins = {
       principal_arn = var.jenkins_user_arn
