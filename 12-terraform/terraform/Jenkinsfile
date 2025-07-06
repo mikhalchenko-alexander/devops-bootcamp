@@ -19,7 +19,7 @@ pipeline {
                 withCredentials([usernamePassword(credentialsId: 'aws', usernameVariable: 'AWS_ACCESS_KEY_ID', passwordVariable: 'AWS_SECRET_ACCESS_KEY')]) {
                     dir('12-terraform/terraform/app') {
                         sh "terraform init"
-                        sh "terraform apply --var-file=dev.tfvars -auto-approve"
+                        sh "terraform destroy --var-file=dev.tfvars -auto-approve"
                     }
                 }
             }
