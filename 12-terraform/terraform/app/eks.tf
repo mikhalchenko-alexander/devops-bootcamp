@@ -64,3 +64,33 @@ module "eks" {
   subnet_ids                     = module.vpc.private_subnets
   cluster_endpoint_public_access = true
 }
+
+resource "aws_vpc_security_group_ingress_rule" "fargate_nodes_to_dns_tcp" {
+  depends_on = [module.eks]
+  security_group_id            = module.eks.node_security_group_id
+  description                  = "Fargate nodes to cluster DNS TCP"
+  ip_protocol                  = "tcp"
+  from_port                    = 53
+  to_port                      = 53
+  referenced_security_group_id = module.eks.cluster_security_group_id
+}
+
+resource "aws_vpc_security_group_ingress_rule" "fargate_nodes_to_dns_udp" {
+  depends_on = [module.eks]
+  security_group_id            = module.eks.node_security_group_id
+  description                  = "Fargate nodes to cluster DNS UDP"
+  ip_protocol                  = "udp"
+  from_port                    = 53
+  to_port                      = 53
+  referenced_security_group_id = module.eks.cluster_security_group_id
+}
+
+resource "aws_vpc_security_group_ingress_rule" "fargate_nodes_to_mysql_tcp" {
+  depends_on = [module.eks]
+  security_group_id            = module.eks.node_security_group_id
+  description                  = "Fargate nodes to MySQL nodes"
+  ip_protocol                  = "tcp"
+  from_port                    = 3306
+  to_port                      = 3306
+  referenced_security_group_id = module.eks.cluster_security_group_id
+}
