@@ -72,7 +72,7 @@ resource "aws_vpc_security_group_ingress_rule" "fargate_nodes_to_dns_tcp" {
   ip_protocol                  = "tcp"
   from_port                    = 53
   to_port                      = 53
-  referenced_security_group_id = data.aws_eks_cluster.cluster.vpc_config.cluster_security_group_id
+  referenced_security_group_id = data.aws_eks_cluster.cluster.vpc_config[0].cluster_security_group_id
 }
 
 resource "aws_vpc_security_group_ingress_rule" "fargate_nodes_to_dns_udp" {
@@ -82,7 +82,7 @@ resource "aws_vpc_security_group_ingress_rule" "fargate_nodes_to_dns_udp" {
   ip_protocol                  = "udp"
   from_port                    = 53
   to_port                      = 53
-  referenced_security_group_id = data.aws_eks_cluster.cluster.vpc_config.cluster_security_group_id
+  referenced_security_group_id = data.aws_eks_cluster.cluster.vpc_config[0].cluster_security_group_id
 }
 
 resource "aws_vpc_security_group_ingress_rule" "fargate_nodes_to_mysql_tcp" {
@@ -92,5 +92,5 @@ resource "aws_vpc_security_group_ingress_rule" "fargate_nodes_to_mysql_tcp" {
   ip_protocol                  = "tcp"
   from_port                    = 3306
   to_port                      = 3306
-  referenced_security_group_id = data.aws_eks_cluster.cluster.vpc_config.cluster_security_group_id
+  referenced_security_group_id = data.aws_eks_cluster.cluster.vpc_config[0].cluster_security_group_id
 }
