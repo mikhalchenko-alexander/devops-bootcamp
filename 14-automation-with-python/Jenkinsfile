@@ -10,10 +10,12 @@ pipeline {
         stage('init python env') {
             steps {
                 script {
-                    if(!fileExists(".venv")) {
-                        sh(script: 'uv venv -p 3.12')
+                    dir('14-automation-with-python') {
+                        if (!fileExists(".venv")) {
+                            sh(script: 'uv venv -p 3.12')
+                        }
+                        sh(script: 'uv pip install -r requirements.txt')
                     }
-                    sh(script: 'uv pip install -r requirements.txt')
                 }
             }
         }
@@ -21,10 +23,12 @@ pipeline {
         stage('select image version') {
             steps {
                 script {
-                    def tags = sh(script: 'python3 list_image_tags.py', returnStdout: true).trim
-                    selectedVersion = input(message: 'Select version to deploy', ok: 'Deploy', parameters: [choise(name: 'Select version', chouses: tags)])
-                    env.DOCKER_IMAGE = "${ECR_REGISTRY}/${ECR_REPOSITORY}:${selectedVersion}"
-                    echo "Selected docker image ${env.DOCKER_IMAGE}"
+                    dir('14-automation-with-python') {
+                        def tags = sh(script: 'python3 list_image_tags.py', returnStdout: true).trim
+                        selectedVersion = input(message: 'Select version to deploy', ok: 'Deploy', parameters: [choise(name: 'Select version', chouses: tags)])
+                        env.DOCKER_IMAGE = "${ECR_REGISTRY}/${ECR_REPOSITORY}:${selectedVersion}"
+                        echo "Selected docker image ${env.DOCKER_IMAGE}"
+                    }
                 }
             }
         }
