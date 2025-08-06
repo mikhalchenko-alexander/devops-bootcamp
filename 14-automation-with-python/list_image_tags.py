@@ -4,7 +4,7 @@ from os import environ as env
 ECR_REGISTRY = env.get('ECR_REGISTRY')
 ECR_REPOSITORY = '14-node-js-app'
 
-session = boto3.Session()
+session = boto3.Session(region_name='eu-central-1')
 ecr_client = session.client('ecr')
 
 response = ecr_client.describe_images(repositoryName=ECR_REPOSITORY)
