@@ -4,6 +4,8 @@ pipeline {
     environment {
         ECR_REGISTRY = '458405758445.dkr.ecr.eu-central-1.amazonaws.com'
         ECR_REPOSITORY = '14-node-js-app'
+        HOST = '3.124.1.203'
+        PORT = '3000'
     }
 
     stages {
@@ -43,11 +45,20 @@ pipeline {
                                 sshUserPrivateKey(credentialsId: 'aws-ssh', usernameVariable: 'USERNAME', keyFileVariable: 'PRIVATE_SSH_KEY'),
                                 usernamePassword(credentialsId: 'ecr-docker', usernameVariable: 'ECR_USR', passwordVariable: 'ECR_PWD')
                         ]) {
-                            env.HOST = ""
-                            env.PORT = "3000"
                             def output = sh(script: 'uv run deploy_image.py', returnStdout: true).trim()
                             echo output
                         }
+                    }
+                }
+            }
+        }
+
+        stage('healthcheck') {
+            steps {
+                script {
+                    dir('14-automation-with-python') {
+                        def output = sh(script: 'uv run healthcheck.py', returnStdout: true).trim()
+                        echo output
                     }
                 }
             }
