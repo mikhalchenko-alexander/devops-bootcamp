@@ -34,7 +34,7 @@ with paramiko.SSHClient() as ssh_client:
 
     print("Deploying image...")
     stdin, stdout, stderr = ssh_client.exec_command(
-        f"sudo docker run -d --name app -p {PORT}:{PORT} {DOCKER_IMAGE}"
+        f"sudo docker pull {DOCKER_IMAGE} && sudo docker run -d --name app -p {PORT}:{PORT} {DOCKER_IMAGE}"
     )
     print("Output:")
     print(stdout.readlines())
