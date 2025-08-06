@@ -34,5 +34,23 @@ pipeline {
                 }
             }
         }
+
+        stage('deploy image') {
+            steps {
+                script {
+                    dir('14-automation-with-python') {
+                        withCredentials([
+                                sshUserPrivateKey(credentialsId: 'aws-ssh', usernameVariable: 'USERNAME', keyFileVariable: 'PRIVATE_SSH_KEY'),
+                                usernamePassword(credentialsId: 'ecr-docker', usernameVariable: 'ECR_USR', passwordVariable: 'ECR_PWD')
+                        ]) {
+                            env.HOST = ""
+                            env.PORT = "3000"
+                            def output = sh(script: 'uv run deploy_image.py', returnStdout: true).trim()
+                            echo output
+                        }
+                    }
+                }
+            }
+        }
     }
 }
