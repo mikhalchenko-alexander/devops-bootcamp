@@ -15,13 +15,13 @@ with paramiko.SSHClient() as ssh_client:
     ssh_client.connect(hostname=HOST, username=USERNAME, key_filename=PRIVATE_SSH_KEY)
 
     print("Logging in to ECR...")
-    stdin, stdout, stderr = ssh_client.exec_command(f"echo {ECR_PWD} | docker login {ECR_REGISTRY} --username {ECR_USR} --password-stdin")
+    stdin, stdout, stderr = ssh_client.exec_command(f"echo {ECR_PWD} | sudo docker login {ECR_REGISTRY} --username {ECR_USR} --password-stdin")
     print("Output:")
     print(stdout.readlines())
     print("Errors:")
     print(stderr.readlines())
 
-    stdin, stdout, stderr = ssh_client.exec_command("docker ps")
+    stdin, stdout, stderr = ssh_client.exec_command("sudo docker ps")
     output = stdout.readlines()
     container_is_running = any("app" in line for line in output)
 
@@ -34,7 +34,7 @@ with paramiko.SSHClient() as ssh_client:
 
     print("Deploying image...")
     stdin, stdout, stderr = ssh_client.exec_command(
-        f"sudo docker pull {DOCKER_IMAGE} && sudo docker run -d --name app -p {PORT}:{PORT} {DOCKER_IMAGE}"
+        f"sudo docker run -d --name app -p {PORT}:{PORT} {DOCKER_IMAGE}"
     )
     print("Output:")
     print(stdout.readlines())
