@@ -24,7 +24,7 @@ pipeline {
             steps {
                 script {
                     dir('14-automation-with-python') {
-                        def tags = sh(script: 'python3 list_image_tags.py', returnStdout: true).trim
+                        def tags = sh(script: 'uv run list_image_tags.py', returnStdout: true).trim
                         selectedVersion = input(message: 'Select version to deploy', ok: 'Deploy', parameters: [choise(name: 'Select version', chouses: tags)])
                         env.DOCKER_IMAGE = "${ECR_REGISTRY}/${ECR_REPOSITORY}:${selectedVersion}"
                         echo "Selected docker image ${env.DOCKER_IMAGE}"
