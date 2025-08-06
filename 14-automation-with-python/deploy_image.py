@@ -21,12 +21,20 @@ with paramiko.SSHClient() as ssh_client:
     print("Errors:")
     print(stderr.readlines())
 
+    stdin, stdout, stderr = ssh_client.exec_command("docker ps")
+    output = stdout.readlines()
+    container_is_running = any("app" in line for line in output)
+
+    if container_is_running:
+        print("Stopping existing container...")
+        stdin, stdout, stderr = ssh_client.exec_command("sudo docker stop app && sudo docker rm app")
+        print("Output:")
+        print(stdout.readlines())
+        print("Errors:")
+
     print("Deploying image...")
     stdin, stdout, stderr = ssh_client.exec_command(
-        f"""sudo docker stop app
-            && sudo docker rm app
-            && sudo docker run -d --name app -p {PORT}:{PORT} {DOCKER_IMAGE}"""
-        .replace("\n", " ")
+        f"sudo docker run -d --name app -p {PORT}:{PORT} {DOCKER_IMAGE}"
     )
     print("Output:")
     print(stdout.readlines())
