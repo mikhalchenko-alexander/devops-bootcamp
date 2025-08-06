@@ -7,6 +7,17 @@ pipeline {
     }
 
     stages {
+        stage('init python env') {
+            steps {
+                script {
+                    if(!fileExists(".venv")) {
+                        sh(script: 'uv venv -p 3.12')
+                    }
+                    sh(script: 'uv pip install -r requirements.txt')
+                }
+            }
+        }
+
         stage('select image version') {
             steps {
                 script {
