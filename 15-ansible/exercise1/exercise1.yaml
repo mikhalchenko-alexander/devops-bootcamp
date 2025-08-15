@@ -1,0 +1,104 @@
+- name: Build java app
+  hosts: localhost
+  tasks:
+    - name: Build jar
+      command:
+        cmd: gradle clean build
+        chdir: "{{ app_dir }}"
+
+- name: Create user
+  hosts: webservers
+  become: true
+  tasks:
+    - name: Create user
+      user:
+        name: "{{ linux_user }}"
+        groups: adm
+
+    - name: Create ~/.ansible/tmp for user
+      file:
+        path: /home/{{linux_user}}/.ansible/tmp
+        state: directory
+        owner: "{{linux_user}}"
+        group: "{{linux_user}}"
+        mode: '0700'
+
+- name: Stop the currently running java application and remove old jar file
+  hosts: webservers
+  become: true
+  become_user: "{{ linux_user }}"
+  vars:
+    ansible_ssh_pipelining: true
+  tasks:
+    - name: Find jar file
+      find:
+        paths: /home/{{ linux_user }}
+        patterns: "*.jar"
+        file_type: file
+      register: find_result
+    - debug: msg={{ find_result }}
+
+    - name: Get the PID of Java running process
+      ignore_errors: yes
+      shell: "ps -few | grep java | awk '{print $2}'"
+      register: running_java_processes
+      when: find_result.files != []
+    - debug: msg={{ running_java_processes }}
+    - name: Kill running Java process
+      ignore_errors: yes
+      shell: "kill {{ running_java_processes.stdout_lines[0] }}"
+      when: running_java_processes.stdout_lines | length > 2
+
+    - name: Remove the jar file
+      shell: rm {{ find_result.files[0].path }}
+      when: find_result.files != []
+
+- name: Copy jar to webservers
+  hosts: webservers
+  gather_facts: true
+  tasks:
+    - name: Find jar
+      find:
+        paths: "{{ app_dir }}/build/libs"
+        patterns: "*.jar"
+        excludes: "*-plain.jar"
+      delegate_to: localhost
+      register: find_result
+
+    - name: Set jar path fact
+      set_fact:
+        jar_file: "{{ find_result.files[0].path }}"
+      delegate_to: localhost
+
+    - name: Copy jar
+      become: true
+      copy:
+        src: "{{ jar_file }}"
+        dest: "/home/{{ linux_user }}/app.jar"
+        owner: "{{ linux_user }}"
+        group: "{{ linux_user }}"
+        mode: '0644'
+
+- name: Ensure Java is installed
+  hosts: webservers
+  become: true
+  tasks:
+    - name: Update apt repo cache
+      apt: update_cache=yes force_apt_get=yes cache_valid_time=3600
+
+    - name: Install Java version 17
+      apt: name=openjdk-17-jre-headless state=present
+
+- name: Start app
+  hosts: webservers
+  become: true
+  vars:
+    ansible_ssh_pipelining: true
+  tasks:
+    - name: Start app
+      shell: java -jar app.jar &
+      args:
+        chdir: "/home/{{ linux_user }}"
+      become: true
+      become_user: "{{ linux_user }}"
+
