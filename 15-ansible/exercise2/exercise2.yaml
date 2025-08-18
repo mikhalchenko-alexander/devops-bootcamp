@@ -1,0 +1,14 @@
+- name: Upload an artifact to Nexus
+  hosts: localhost
+  tasks:
+    - name: Upload an artifact to Nexus
+      uri:
+        url: "{{ nexus_endpoint }}/repository/{{ repository_name }}/{{ artifact_group_path }}/{{ artifact_id }}/{{ version }}/{{ artifact_id }}-{{ version }}.jar"
+        method: PUT
+        src: "{{ jar_path }}"
+        user: "{{ nexus_user }}"
+        password: "{{ nexus_password }}"
+        force_basic_auth: yes
+        headers:
+          Content-Type: application/java-archive
+        status_code: [201]

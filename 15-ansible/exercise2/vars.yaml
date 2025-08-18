@@ -1,0 +1,4 @@
+nexus_endpoint: http://localhost:8081
+repository_name: java-app
+artifact_group_path: com/example
+artifact_id: java-app
