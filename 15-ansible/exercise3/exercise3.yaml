@@ -1,23 +1,4 @@
-- name: Provision EC2 instance
-  hosts: localhost
-  tasks:
-    - name: Create EC2 instance
-      amazon.aws.ec2_instance:
-        key_name: devops-bootcamp
-        instance_type: "{{ instance_type }}"
-        image_id: "{{ ami }}"
-        wait: yes
-        state: running
-        region: "{{ region }}"
-        vpc_subnet_id: "{{ vpc_subnet_id }}"
-        network_interfaces:
-          - assign_public_ip: true
-        security_group: "{{ security_group }}"
-        name: "ansible-jenkins"
-    - pause:
-        seconds: 60
-
-- name: Install Jenkins
+- name: Install Tools
   hosts: _ansible_jenkins
   become: yes
   tasks:
@@ -30,3 +11,25 @@
           - docker
         update_cache: yes
         state: present
+
+- name: Install Jenkins
+  hosts: _ansible_jenkins
+  become: yes
+  tasks:
+    - name: Download Jenkins repository file
+      get_url:
+        url: https://pkg.jenkins.io/redhat-stable/jenkins.repo
+        dest: /etc/yum.repos.d/jenkins.repo
+
+    - name: Import Jenkins-CI key
+      shell: rpm --import https://pkg.jenkins.io/redhat-stable/jenkins.io-2023.key
+
+    - name: Install Jenkins
+      yum:
+        name: jenkins
+        state: present
+
+    - name: Start Jenkins
+      service:
+        name: jenkins
+        state: started
