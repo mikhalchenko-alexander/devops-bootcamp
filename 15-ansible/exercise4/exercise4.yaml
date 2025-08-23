@@ -1,0 +1,73 @@
+- name: Install Tools
+  hosts: _ansible_jenkins
+  become: yes
+  gather_facts: true
+  tasks:
+    - name: Install Tools
+      ansible.builtin.yum:
+        name:
+          - java-17-amazon-corretto
+          - nodejs22
+          - nodejs22-npm
+          - docker
+        update_cache: yes
+        state: present
+      when: ansible_facts['os_family'] == "RedHat"
+
+    - name: Install tools
+      ansible.builtin.apt:
+        name:
+          - openjdk-17-jre
+          - nodejs
+          - npm
+          - docker.io
+        update_cache: yes
+      when: ansible_facts['os_family'] == "Debian"
+
+- name: Install Jenkins
+  hosts: _ansible_jenkins
+  become: yes
+  tasks:
+    - name: Download Jenkins repository file
+      get_url:
+        url: https://pkg.jenkins.io/redhat-stable/jenkins.repo
+        dest: /etc/yum.repos.d/jenkins.repo
+      when: ansible_facts['os_family'] == "RedHat"
+
+    - name: Download Jenkins key file
+      get_url:
+        url: https://pkg.jenkins.io/debian-stable/jenkins.io-2023.key
+        dest: /etc/apt/keyrings/jenkins-keyring.asc
+      when: ansible_facts['os_family'] == "Debian"
+
+    - name: Import Jenkins key
+      shell: rpm --import https://pkg.jenkins.io/redhat-stable/jenkins.io-2023.key
+      when: ansible_facts['os_family'] == "RedHat"
+
+    - name: Import Jenkins key
+      shell: echo "deb [signed-by=/etc/apt/keyrings/jenkins-keyring.asc]" https://pkg.jenkins.io/debian-stable binary/ | sudo tee /etc/apt/sources.list.d/jenkins.list > /dev/null
+      when: ansible_facts['os_family'] == "Debian"
+
+    - name: Install Jenkins
+      ansible.builtin.yum:
+        name: jenkins
+        state: present
+        update_cache: yes
+      when: ansible_facts['os_family'] == "RedHat"
+
+    - name: Install Jenkins
+      ansible.builtin.apt:
+        name: jenkins
+        state: present
+        update_cache: yes
+      when: ansible_facts['os_family'] == "Debian"
+
+- name: Start Jenkins
+  hosts: _ansible_jenkins
+  become: yes
+  tasks:
+    - name: Start Jenkins
+      service:
+        name: jenkins
+        state: started
+        enabled: yes

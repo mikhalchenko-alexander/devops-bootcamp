@@ -1,0 +1,19 @@
+- name: Provision EC2 instance
+  hosts: localhost
+  tasks:
+    - name: Create EC2 instance
+      amazon.aws.ec2_instance:
+        key_name: devops-bootcamp
+        instance_type: "{{ instance_type }}"
+        image_id: "{{ ami }}"
+        wait: yes
+        state: running
+        region: "{{ region }}"
+        vpc_subnet_id: "{{ vpc_subnet_id }}"
+        network_interfaces:
+          - assign_public_ip: true
+        security_group: "{{ security_group }}"
+        name: "ansible-jenkins"
+
+    - pause:
+        seconds: 60
