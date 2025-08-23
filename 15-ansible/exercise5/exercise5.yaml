@@ -1,0 +1,26 @@
+- name: Install Docker
+  hosts: jenkins
+  become: yes
+  tasks:
+    - name: Install Docker
+      apt:
+        name: docker.io
+        state: present
+        update_cache: yes
+
+- name: Run Jenkins
+  hosts: jenkins
+  become: yes
+  tasks:
+    - name: Run Jenkins
+      community.docker.docker_container:
+        name: jenkins
+        image: jenkins/jenkins:lts
+        ports:
+          - "8080:8080"
+          - "50000:50000"
+        volumes:
+          - /var/run/docker.sock:/var/run/docker.sock
+          - /usr/local/bin/docker:/usr/bin/docker
+          - jenkins_home:/var/jenkins_home
+        restart_policy: always
