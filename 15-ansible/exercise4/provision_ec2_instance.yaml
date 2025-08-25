@@ -10,7 +10,7 @@
         state: running
         region: "{{ region }}"
         vpc_subnet_id: "{{ vpc_subnet_id }}"
-        network_interfaces:
+        network:
           - assign_public_ip: true
         security_group: "{{ security_group }}"
         name: "ansible-jenkins"
