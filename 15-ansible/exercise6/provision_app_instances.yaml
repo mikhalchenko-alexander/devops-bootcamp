@@ -1,0 +1,33 @@
+- name: Provision App instances
+  hosts: localhost
+  tasks:
+    - name: Create Database instance
+      amazon.aws.ec2_instance:
+        key_name: devops-bootcamp
+        instance_type: "{{ instance_type }}"
+        image_id: "{{ ami }}"
+        wait: yes
+        state: running
+        region: "{{ region }}"
+        vpc_subnet_id: "{{ vpc_subnet_id }}"
+        network:
+          - assign_public_ip: false
+        security_group: "{{ security_group }}"
+        name: "java-app-database"
+
+    - name: Create Java app instance
+      amazon.aws.ec2_instance:
+        key_name: devops-bootcamp
+        instance_type: "{{ instance_type }}"
+        image_id: "{{ ami }}"
+        wait: yes
+        state: running
+        region: "{{ region }}"
+        vpc_subnet_id: "{{ vpc_subnet_id }}"
+        network:
+          - assign_public_ip: true
+        security_group: "{{ security_group }}"
+        name: "java-app"
+
+    - pause:
+        seconds: 60
