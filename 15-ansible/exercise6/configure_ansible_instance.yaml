@@ -1,0 +1,66 @@
+- name: Configure Ansible instance
+  hosts: _ansible_controller
+  tasks:
+    - name: Install tools
+      become: yes
+      ansible.builtin.apt:
+        name:
+          - python3.12
+          - ansible
+        update_cache: yes
+        state: present
+
+    - name: Install MySQL role
+      ansible.builtin.command:
+        cmd: ansible-galaxy role install geerlingguy.mysql
+
+- name: Copy private key
+  hosts: _ansible_controller
+  tasks:
+    - name: Copy private key
+      ansible.builtin.copy:
+        src: ~/.ssh/devops-bootcamp.pem
+        dest: ~/.ssh/devops-bootcamp.pem
+        mode: 0600
+
+- name: Copy app config files
+  hosts: _ansible_controller
+  vars:
+    home_folder: /home/ubuntu
+    app_folder: /home/ubuntu/app
+  tasks:
+    - name: Create app directory
+      ansible.builtin.file:
+        path: "{{ app_folder }}"
+        state: directory
+        mode: '0755'
+
+    - name: Copy jar file
+      ansible.builtin.copy:
+        src: ./java-app/build/libs/build-tools-exercises-1.0-SNAPSHOT.jar
+        dest: "{{ app_folder }}/app.jar"
+
+    - name: Copy config file
+      ansible.builtin.copy:
+        src: ./ansible.cfg
+        dest: "{{ app_folder }}/"
+
+    - name: Copy inventory file
+      ansible.builtin.copy:
+        src: ./inventory_aws_ec2.yaml
+        dest: "{{ app_folder }}/"
+
+    - name: Copy playbook file
+      ansible.builtin.copy:
+        src: ./configure_app_instances_remote.yaml
+        dest: "{{ app_folder }}/"
+
+    - name: Copy var file
+      ansible.builtin.copy:
+        src: ./vars_remote.yaml
+        dest: "{{ app_folder }}/"
+
+    - name: Copy AWS credentials file
+      ansible.builtin.copy:
+        src: ./credentials
+        dest: "{{ home_folder }}/.aws/"

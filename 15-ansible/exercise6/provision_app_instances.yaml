@@ -9,8 +9,8 @@
         wait: yes
         state: running
         region: "{{ region }}"
-        vpc_subnet_id: "{{ vpc_subnet_id }}"
-        network:
+        vpc_subnet_id: "{{ database_vpc_subnet_id }}"
+        network_interfaces:
           - assign_public_ip: false
         security_group: "{{ security_group }}"
         name: "java-app-database"
@@ -23,8 +23,8 @@
         wait: yes
         state: running
         region: "{{ region }}"
-        vpc_subnet_id: "{{ vpc_subnet_id }}"
-        network:
+        vpc_subnet_id: "{{ java_app_vpc_subnet_id }}"
+        network_interfaces:
           - assign_public_ip: true
         security_group: "{{ security_group }}"
         name: "java-app"

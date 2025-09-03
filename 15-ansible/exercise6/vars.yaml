@@ -1,4 +1,6 @@
-vpc_subnet_id: subnet-08e58d2f8ab4938ed
+java_app_vpc_subnet_id: subnet-08e58d2f8ab4938ed
+ansible_vpc_subnet_id: subnet-08e58d2f8ab4938ed
+database_vpc_subnet_id: subnet-0009ae4c306ad0744
 security_group: sg-00184596883bdb089
 ami: ami-02003f9f0fde924ea # Ubuntu Server 24.04 LTS
 instance_type: t2.micro

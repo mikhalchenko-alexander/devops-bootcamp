@@ -1,0 +1,7 @@
+- name: Configure App Instances
+  hosts: _ansible_controller
+  vars:
+    app_folder: /home/ubuntu/app
+  tasks:
+    - name: Run Ansible playbook
+      shell: ANSIBLE_CONFIG={{ app_folder }}/ansible.cfg ansible-playbook -vvvv -i {{ app_folder }}/inventory_aws_ec2.yaml -e "@{{ app_folder }}/vars_remote.yaml" {{ app_folder }}/configure_app_instances_remote.yaml > {{ app_folder }}/ansible.log
