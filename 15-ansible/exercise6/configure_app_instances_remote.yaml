@@ -31,14 +31,15 @@
       ansible.builtin.copy:
         src: "{{ app_folder }}/app.jar"
         dest: "{{ app_folder }}/app.jar"
-
     - name: Start app
-      shell: java -jar app.jar &
+      command: java -jar {{ app_folder }}/app.jar &
+      async: 1000
+      poll: 0
       environment:
         DB_USER: "{{ mysql_users[0].name }}"
         DB_PWD: "{{ mysql_users[0].password }}"
         DB_SERVER: "{{ hostvars[groups['_java_app_database'][0]]['ansible_default_ipv4']['address'] }}"
-        DB_NAME: "{{ mysql_databases[0] }}"
+        DB_NAME: "{{ mysql_databases[0].name }}"
 
 
 
