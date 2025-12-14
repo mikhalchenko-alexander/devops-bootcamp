@@ -33,3 +33,12 @@ secondary:
     limits:
       memory: "768Mi"
       cpu: "500m"
+
+metrics:
+  enabled: true
+  serviceMonitor:
+    enabled: true
+    labels:
+      release: monitoring-stack
+  image:
+    tag: latest
