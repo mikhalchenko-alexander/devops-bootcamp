@@ -1,0 +1,21 @@
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+  name: nginx-ingress-rule
+  namespace: monitoring
+  labels:
+    app: kube-prometheus-stack
+    release: monitoring-stack
+spec:
+  groups:
+    - name: nginx-ingress.rules
+      rules:
+      - alert: Nginx4xxRateHigh
+        expr: sum(rate(nginx_ingress_controller_requests{status=~"4.."}[1m])) / sum(rate(nginx_ingress_controller_requests[1m])) * 100 > 5
+        for: 1m
+        labels:
+          severity: critical
+          namespace: monitoring
+        annotations:
+          summary: "Nginx 4xx rate high"
+          description: "Too many 4xx errors (> 5%)\n VALUE = {{ $value }}%\n LABELS: {{ $labels }}"
