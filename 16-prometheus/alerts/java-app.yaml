@@ -1,0 +1,21 @@
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+  name: java-app-rule
+  namespace: monitoring
+  labels:
+    app: kube-prometheus-stack
+    release: monitoring-stack
+spec:
+  groups:
+    - name: java-app.rules
+      rules:
+      - alert: TooManyRequests
+        expr: increase(java_app_http_requests_total[1m]) > 20
+        for: 2m
+        labels:
+          severity: warning
+          namespace: monitoring
+        annotations:
+          summary: "Java application too many connections (> 20/minute) (instance {{ $labels.instance }})"
+          description: "More than 20 requests per minute on {{ $labels.instance }}\n  VALUE = {{ $value }}\n  LABELS = {{ $labels }}"
