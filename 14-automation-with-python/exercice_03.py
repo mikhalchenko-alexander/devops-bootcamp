@@ -115,21 +115,41 @@ def check_instance_health(ip_address):
 
 
 def open_ports(sg_id):
-    ec2_client.authorize_security_group_ingress(
-        GroupId=sg_id,
-        FromPort=22,
-        ToPort=22,
-        IpProtocol='tcp',
-        CidrIp='0.0.0.0/0'
+    rules_response = ec2_client.describe_security_group_rules(
+        Filters=[
+            {
+                'Name': 'group-id',
+                'Values': [sg_id]
+            },
+        ],
     )
 
-    ec2_client.authorize_security_group_ingress(
-        GroupId=sg_id,
-        FromPort=8080,
-        ToPort=8080,
-        IpProtocol='tcp',
-        CidrIp='0.0.0.0/0'
-    )
+    rules = rules_response['SecurityGroupRules']
+    port_22_is_open = False
+    port_8080_is_open = False
+    for rule in rules:
+        if rule['FromPort'] == 22 and rule['ToPort'] == 22 and rule['IpProtocol'] == 'tcp':
+            port_22_is_open = True
+        if rule['FromPort'] == 8080 and rule['ToPort'] == 8080 and rule['IpProtocol'] == 'tcp':
+            port_8080_is_open = True
+
+    if not port_22_is_open:
+        ec2_client.authorize_security_group_ingress(
+            GroupId=sg_id,
+            FromPort=22,
+            ToPort=22,
+            IpProtocol='tcp',
+            CidrIp='0.0.0.0/0'
+        )
+
+    if not port_8080_is_open:
+        ec2_client.authorize_security_group_ingress(
+            GroupId=sg_id,
+            FromPort=8080,
+            ToPort=8080,
+            IpProtocol='tcp',
+            CidrIp='0.0.0.0/0'
+        )
 
 
 def cleanup_instance():
