@@ -34,7 +34,16 @@ def create_instance():
 
 def get_instance():
     resp = ec2_client.describe_instances(Filters=[{'Name': 'tag:Name', 'Values': ['DevOps Automation with Python']}])
-    return resp['Reservations'][0]['Instances'][0]
+
+    reservations = resp['Reservations']
+    if not reservations or len(reservations) == 0:
+        return None
+
+    instances = reservations[0]['Instances']
+    if not instances or len(instances) == 0:
+        return None
+
+    return instances[0]
 
 
 def instance_ready(inst_id):
